@@ -11,11 +11,12 @@ from os.path import isfile, join
 from random import randint
 from InstagramAPI import InstagramAPI
 
-PhotoPath = "~/igphoto/" # Change Directory to Folder with Pics that you want to upload
-IGUSER    = "IGUsername" # Change to your Instagram USERNAME
-PASSWD    = "IGPassword" # Change to your Instagram Password
+
+PhotoPath = "/Users/ramdani/Documents/practices/Instagram-API-python/examples/photo" # Change Directory to Folder with Pics that you want to upload
+IGUSER    = "jakarumana" # Change to your Instagram USERNAME
+PASSWD    = "master88" # Change to your Instagram Password
 # Change to your Photo Hashtag
-IGCaption = "Your Caption Here #hashtag"
+IGCaption = "Selamat Hari Raya Idul Fitri #idulfitri"
 
 os.chdir(PhotoPath)
 ListFiles = [f for f in listdir(PhotoPath) if isfile(join(PhotoPath, f))]

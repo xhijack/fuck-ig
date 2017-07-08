@@ -5,9 +5,14 @@
 
 from InstagramAPI import InstagramAPI
 
-InstagramAPI = InstagramAPI("login", "password")
+InstagramAPI = InstagramAPI("jakarumana", "master88")
 InstagramAPI.login() # login
-InstagramAPI.tagFeed("cat") # get media list by tag #cat
+InstagramAPI.tagFeed("000studio") # get media list by tag #cat
 media_id = InstagramAPI.LastJson # last response JSON
 InstagramAPI.like(media_id["ranked_items"][0]["pk"]) # like first media
 InstagramAPI.getUserFollowers(media_id["ranked_items"][0]["user"]["pk"]) # get first media owner followers
+
+photo = "/Users/ramdani/Downloads/Abu-Immo-v2.png"
+
+
+# InstagramAPI.uploadPhoto(photo=photo)
