@@ -90,8 +90,10 @@ class Bot(object):
             print("Uoload ", file)
             caption = self._get_caption(file)
             if caption:
+                if caption == "":
+                    caption = "#khimar %khimarinstan #ciput #ciputrajut #khimarwolvis #khimarwolpeach #khimarwolpis #khimarsyari #khimarmurah #jilbab"
                 self.igapi.uploadPhoto(file, caption=caption, upload_id=None)
-                n = randint(100, 500)
+                n = randint(600, 1200)
                 print("Sleep upload for seconds: " + str(n))
                 time.sleep(n)
             else:
