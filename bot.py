@@ -11,8 +11,10 @@ from os.path import isfile, join
 from random import randint
 from InstagramAPI import InstagramAPI
 
+dir_path = os.path.dirname(os.path.realpath(__file__))
 
-PhotoPath = "/Users/ramdani/Documents/practices/Instagram-API-python/results" # Change Directory to Folder with Pics that you want to upload
+
+PhotoPath = dir_path + "/results" # Change Directory to Folder with Pics that you want to upload
 IGUSER    = "jakarumana" # Change to your Instagram USERNAME
 PASSWD    = "master88" # Change to your Instagram Password
 # Change to your Photo Hashtag
@@ -67,6 +69,7 @@ class Bot(object):
         return ListFiles
 
     def _get_caption(self, name):
+        print("trying get: ", os.path.isfile(name[:-3] + 'txt'))
         if os.path.isfile(name[:-3] + 'txt'):
             data = open(name[:-3] + 'txt')
             return data.read()
@@ -101,7 +104,7 @@ class Bot(object):
 
 
 if __name__ == '__main__':
-    bot = Bot(username='jakarumana', password='master88', photo_path="/Users/ramdani/Documents/practices/Instagram-API-python/results")
+    bot = Bot(username='jakarumana', password='master88', photo_path=dir_path + "/results")
     try:
         bot.run()
     except KeyboardInterrupt:

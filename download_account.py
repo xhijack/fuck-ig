@@ -10,13 +10,15 @@ from os import listdir
 from os.path import isfile, join
 from random import randint
 
+import os
 import requests
 
 from InstagramAPI import InstagramAPI
+dir_path = os.path.dirname(os.path.realpath(__file__))
 
 
 def download(pic_url, name):
-    with open('/Users/ramdani/Documents/practices/Instagram-API-python/results/' + name + '.jpg', 'wb') as handle:
+    with open(dir_path + '/results/' + name + '.jpg', 'wb') as handle:
         response = requests.get(pic_url, stream=True)
 
         if not response.ok:
@@ -30,26 +32,21 @@ def download(pic_url, name):
 
 
 def write_text(text, name):
-    fh = open('/Users/ramdani/Documents/practices/Instagram-API-python/results/' + name + '.txt', 'w')
+    fh = open(dir_path + '/results/' + name + '.txt', 'w')
     fh.write(text)
     fh.close()
 
 
-PhotoPath = "/Users/ramdani/Documents/practices/Instagram-API-python/examples/photo" # Change Directory to Folder with Pics that you want to upload
+PhotoPath = dir_path + "/examples/photo" # Change Directory to Folder with Pics that you want to upload
 IGUSER    = "jakarumana" # Change to your Instagram USERNAME
 PASSWD    = "master88" # Change to your Instagram Password
 # Change to your Photo Hashtag
-IGCaption = "Selamat Hari Raya Idul Fitri #idulfitri"
-
-os.chdir(PhotoPath)
-ListFiles = [f for f in listdir(PhotoPath) if isfile(join(PhotoPath, f))]
-print ("Total Photo in this folder:" + str (len(ListFiles)))
 
 #Start Login and Uploading Photo
 igapi = InstagramAPI(IGUSER,PASSWD)
 igapi.login() # login
 
-igapi.getUserFeed('1552719530')
+igapi.getUserFeed('3669636824')
 
 response = igapi.LastJson
 results = set()
