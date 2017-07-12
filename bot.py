@@ -88,19 +88,21 @@ if __name__ == '__main__':
     photo_path = dir_path + "/results"
     list_files = [f for f in listdir(photo_path) if isfile(join(photo_path, f)) and f.endswith(".jpg")]
 
-    print("Total Uploads: ", len(list_files))
-    for file in list_files:
-        print("trying upload ", file)
-        for bot in bots:
-            print("Bot {} upload {}".format(bot.username, file))
-            bot._upload(file, bot._get_caption(file))
-        n = randint(600, 1200)
-        print("Sleep upload for seconds: " + str(n))
-        time.sleep(n)
-
-    for bot in bots:
-        bot._logout()
-        print("User {} logout", bot.username)
+    print(photo_path)
+    print(list_files)
+    # print("Total Uploads: ", len(list_files))
+    # for file in list_files:
+    #     print("trying upload ", file)
+    #     for bot in bots:
+    #         print("Bot {} upload {}".format(bot.username, file))
+    #         bot._upload(file, bot._get_caption(file))
+    #     n = randint(600, 1200)
+    #     print("Sleep upload for seconds: " + str(n))
+    #     time.sleep(n)
+    #
+    # for bot in bots:
+    #     bot._logout()
+    #     print("User {} logout", bot.username)
 
 
 
