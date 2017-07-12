@@ -9,6 +9,9 @@ import random
 from os import listdir
 from os.path import isfile, join
 from random import randint
+
+import redis
+
 from InstagramAPI import InstagramAPI
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -21,44 +24,15 @@ PASSWD    = "master88" # Change to your Instagram Password
 IGCaption = "Selamat Hari Raya Idul Fitri #idulfitri"
 
 os.chdir(PhotoPath)
-import pdb
-#
-# ListFiles = [f for f in listdir(PhotoPath) if isfile(join(PhotoPath, f)) and f.endswith(".jpg")]
-# print("Total Photo in this folder:" + str(len(ListFiles)))
-#
-# def ambil_text(name):
-#     if os.path.isfile(name[:-3] + 'txt'):
-#         data = open(name[:-3] + 'txt')
-#         return data.read()
-#     return False
-#
-# # Start Login and Uploading Photo
-# igapi = InstagramAPI(IGUSER,PASSWD)
-# igapi.login() # login
-#
-# for i in range(len(ListFiles)):
-#     photo = ListFiles[i]
-#     print ("Progress :" + str([i+1]) + " of " + str(len(ListFiles)))
-#     print ("Now Uploading this photo to instagram: " + photo)
-#     caption = ambil_text(photo)
-#     if caption:
-#         igapi.uploadPhoto(photo,caption=caption,upload_id=None)
-#         # sleep for random between 600 - 1200s
-#         n = randint(600,1200)
-#         print ("Sleep upload for seconds: " + str(n))
-#         time.sleep(n)
-#     else:
-#         print('Skip for ', photo)
-
 
 
 class Bot(object):
 
-    def __init__(self, username, password, photo_path):
+    def __init__(self, username, password, photo_path, redis):
         self.username = username
         self.password = password
         self.photo_path = photo_path
-
+        self.redis = redis
         self.igapi = InstagramAPI(self.username,self.password)
 
     def _login(self):
@@ -69,11 +43,7 @@ class Bot(object):
         return ListFiles
 
     def _get_caption(self, name):
-        print("trying get: ", os.path.isfile(name[:-3] + 'txt'))
-        if os.path.isfile(name[:-3] + 'txt'):
-            data = open(name[:-3] + 'txt')
-            return data.read()
-        return False
+        return self.redis.get(name)
 
     def run(self):
         print ("Tyring login")
@@ -92,19 +62,16 @@ class Bot(object):
         for file in list_files:
             print("Uoload ", file)
             caption = self._get_caption(file)
-            if caption:
-                if caption == "":
-                    caption = "#khimar %khimarinstan #ciput #ciputrajut #khimarwolvis #khimarwolpeach #khimarwolpis #khimarsyari #khimarmurah #jilbab"
-                self.igapi.uploadPhoto(file, caption=caption, upload_id=None)
-                n = randint(600, 1200)
-                print("Sleep upload for seconds: " + str(n))
-                time.sleep(n)
-            else:
-                print("skip for ", file)
+            self.igapi.uploadPhoto(file, caption=caption, upload_id=None)
+            n = randint(600, 1200)
+            print("Sleep upload for seconds: " + str(n))
+            time.sleep(n)
 
 
 if __name__ == '__main__':
-    bot = Bot(username='jakarumana', password='master88', photo_path=dir_path + "/results")
+    r = redis.StrictRedis(host='localhost', port=6379, db=0, decode_responses=True)
+
+    bot = Bot(username='jakarumana', password='master88', photo_path=dir_path + "/results", redis=r)
     try:
         bot.run()
     except KeyboardInterrupt:
