@@ -43,7 +43,10 @@ class Bot(object):
         return ListFiles
 
     def _get_caption(self, name):
-        return self.redis.get(name)
+        return self.redis.get(name[:-4])
+
+    def _delete_data(self, name):
+        self.redis.delete(name[:-4])
 
     def run(self):
         print ("Tyring login")
@@ -62,6 +65,7 @@ class Bot(object):
         for file in list_files:
             print("Uoload ", file)
             caption = self._get_caption(file)
+            self._delete_data(file)
             self.igapi.uploadPhoto(file, caption=caption, upload_id=None)
             n = randint(600, 1200)
             print("Sleep upload for seconds: " + str(n))
