@@ -17,15 +17,6 @@ from InstagramAPI import InstagramAPI
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
 
-PhotoPath = dir_path + "/results" # Change Directory to Folder with Pics that you want to upload
-IGUSER    = "jakarumana" # Change to your Instagram USERNAME
-PASSWD    = "master88" # Change to your Instagram Password
-# Change to your Photo Hashtag
-IGCaption = "Selamat Hari Raya Idul Fitri #idulfitri"
-
-os.chdir(PhotoPath)
-
-
 class Bot(object):
 
     def __init__(self, username, password, photo_path, redis):
@@ -71,13 +62,46 @@ class Bot(object):
             print("Sleep upload for seconds: " + str(n))
             time.sleep(n)
 
+    def _upload(self, file, caption):
+        self.igapi.uploadPhoto(file, caption=caption, upload_id=None)
 
 if __name__ == '__main__':
     r = redis.StrictRedis(host='localhost', port=6379, db=0, decode_responses=True)
 
-    bot = Bot(username='jakarumana', password='master88', photo_path=dir_path + "/results", redis=r)
-    try:
-        bot.run()
-    except KeyboardInterrupt:
-        print("Wow interupt keyboard")
+    # bot = Bot(username='jakarumana', password='master88', photo_path=dir_path + "/results", redis=r)
+    # try:
+    #     bot.run()
+    # except KeyboardInterrupt:
+    #     print("\n Wow interupt keyboard")
+    #     bot._logout()
+
+    from accounts import ACCOUNTS
+
+    bots = []
+    for acc in ACCOUNTS:
+        bot = Bot(username=acc['username'], password=acc['password'], photo_path=dir_path + "/results", redis=r)
+        print("Login for ", acc['username'])
+        bot._login()
+        bots.append(bot)
+
+    # list_files = bot._dirphotolist()
+    photo_path = dir_path + "/results"
+    list_files = [f for f in listdir(photo_path) if isfile(join(photo_path, f)) and f.endswith(".jpg")]
+
+    print("Total Uploads: ", len(list_files))
+    for file in list_files:
+        print("trying upload ", file)
+        for bot in bots:
+            print("Bot {} upload {}".format(bot.username, file))
+            bot._upload(file, bot._get_caption(file))
+        n = randint(600, 1200)
+        print("Sleep upload for seconds: " + str(n))
+        time.sleep(n)
+
+    for bot in bots:
         bot._logout()
+        print("User {} logout", bot.username)
+
+
+
+
